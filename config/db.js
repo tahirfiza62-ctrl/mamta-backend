@@ -3,7 +3,18 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
   const uri = process.env.MONGO_URI;
-
+console.log("MongoDB URI diagnostics:", {
+  exists: Boolean(uri),
+  length: uri?.length ?? 0,
+  startsCorrectly:
+    uri?.startsWith("mongodb+srv://") ||
+    uri?.startsWith("mongodb://"),
+  hasLeadingOrTrailingWhitespace: uri !== uri?.trim(),
+  hasQuotes: uri?.includes('"') || uri?.includes("'"),
+  hasAngleBrackets: /[<>]/.test(uri || ""),
+  hasPlaceholder: /YOUR_USERNAME|YOUR_PASSWORD|xxxxx/i.test(uri || ""),
+  hasLiteralBackslash: uri?.includes("\\"),
+});
   if (!uri) {
     throw new Error(
       "MONGO_URI is missing from environment variables"
